@@ -1,50 +1,141 @@
-@extends('layouts.auth')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Surat Lamaran Live Preview</title>
 
-@section('title', 'Login')
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eaeaea;
+}
+.container{
+    display:flex;
+    height:100vh;
+}
+.left{
+    width:40%;
+    padding:20px;
+    background:#ffffff;
+    box-shadow:2px 0 8px rgba(0,0,0,0.1);
+    overflow:auto;
+}
+.right{
+    width:60%;
+    background:#fafafa;
+}
+h3{
+    margin-top:0;
+    text-align:center;
+}
+label{
+    font-size:13px;
+    font-weight:bold;
+}
+input,textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+.btn-print{
+    background:#2c7be5;
+    color:white;
+}
+.btn-clear{
+    background:#dc3545;
+    color:white;
+}
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+.btn-group{
+    display:flex;
+    gap:10px;
+}
+</style>
+</head>
 
-@section('content')
-<div class="row justify-content-center">
-    <div class="col-xl-5 col-lg-6 col-md-7">
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-5">
+<body>
 
-                <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
-                </div>
+<div class="container">
 
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
+<!-- FORM -->
+<div class="left">
+<h3>Form Surat Lamaran</h3>
 
-                    <div class="form-group">
-                        <input type="email" name="email" class="form-control form-control-user"
-                               placeholder="Email" required autofocus>
-                    </div>
+<label>Kota & Tanggal</label>
+<input id="kota" placeholder="Bandung, 30 Januari 2026">
 
-                    <div class="form-group">
-                        <input type="password" name="password" class="form-control form-control-user"
-                               placeholder="Password" required>
-                    </div>
+<label>Nama Penyusun</label>
+<input id="name" placeholder="Nama Lengkap">
 
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox small">
-                            <input type="checkbox" class="custom-control-input" id="remember" name="remember">
-                            <label class="custom-control-label" for="remember">Remember Me</label>
-                        </div>
-                    </div>
+<label>Email</label>
+<input id="email">
 
-                    <button class="btn btn-primary btn-user btn-block">
-                        Login
-                    </button>
-                </form>
+<label>No HP</label>
+<input id="phone">
 
-                <hr>
+<label>Alamat</label>
+<input id="alamat">
 
-                <div class="text-center">
-                    <a class="small" href="{{ route('register') }}">Buat akun</a>
-                </div>
+<label>Nama Perusahaan</label>
+<input id="company">
 
-            </div>
-        </div>
-    </div>
+<label>Isi Surat</label>
+<textarea id="body" rows="6"></textarea>
+
+<div class="btn-group">
+    <button class="btn-print" onclick="printPdf()">Cetak PDF</button>
+    <button class="btn-clear" onclick="clearForm()">Clear</button>
 </div>
-@endsection
+</div>
+
+<!-- PREVIEW -->
+<div class="right">
+    <iframe id="preview" src="{{ route('preview') }}"></iframe>
+</div>
+
+</div>
+
+<script>
+const iframe = document.getElementById("preview");
+
+function updatePreview(){
+    iframe.contentWindow.postMessage({
+        kota: document.getElementById("kota").value,
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        alamat: document.getElementById("alamat").value,
+        company: document.getElementById("company").value,
+        body: document.getElementById("body").value
+    }, "*");
+}
+
+document.querySelectorAll("input, textarea").forEach(el=>{
+    el.addEventListener("input", updatePreview);
+});
+
+function clearForm(){
+    document.querySelectorAll("input, textarea").forEach(el=>el.value="");
+    updatePreview();
+}
+
+function printPdf(){
+    iframe.contentWindow.print();
+}
+</script>
+
+</body>
+</html>
