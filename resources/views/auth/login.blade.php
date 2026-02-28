@@ -2,138 +2,171 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Surat Lamaran Live Preview</title>
+<title>Login | TravelKu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
+:root{
+    --primary:#0F172A;
+    --secondary:#3B82F6;
+}
+
+*{
     margin:0;
-    font-family:Arial;
-    background:#eaeaea;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
-.container{
-    display:flex;
+
+body{
     height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    background:
+        linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.85)),
+        url("/images/kabah.jpg") center/cover no-repeat;
 }
-.left{
-    width:40%;
-    padding:20px;
-    background:#ffffff;
-    box-shadow:2px 0 8px rgba(0,0,0,0.1);
-    overflow:auto;
+
+/* HEADER ATAS */
+.header{
+    text-align:center;
+    color:#fff;
+    margin-bottom:20px;
 }
-.right{
-    width:60%;
-    background:#fafafa;
+
+.header h1{
+    font-size:26px;
+    margin-bottom:5px;
 }
-h3{
-    margin-top:0;
+
+.header p{
+    font-size:13px;
+    opacity:.8;
+}
+
+/* CARD */
+.card{
+    width:360px;
+    max-width:90%;
+    background:#fff;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    animation:fade .5s ease;
+}
+
+@keyframes fade{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1}
+}
+
+h2{
+    margin-bottom:15px;
+    font-size:20px;
     text-align:center;
 }
-label{
-    font-size:13px;
-    font-weight:bold;
-}
-input,textarea{
+
+/* INPUT */
+.input{
     width:100%;
-    padding:10px;
+    padding:11px;
     margin-bottom:12px;
-    border:1px solid #ccc;
-    border-radius:5px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-size:13px;
 }
-button{
-    padding:10px 15px;
+
+.input:focus{
+    border-color:var(--secondary);
+    outline:none;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:12px;
     border:none;
-    border-radius:5px;
+    border-radius:8px;
+    background:var(--secondary);
+    color:#fff;
+    font-weight:600;
     cursor:pointer;
 }
-.btn-print{
-    background:#2c7be5;
-    color:white;
+
+.btn:hover{
+    background:#2563eb;
 }
-.btn-clear{
-    background:#dc3545;
-    color:white;
+
+/* ERROR */
+.error{
+    background:#ffe5e5;
+    padding:8px;
+    border-radius:6px;
+    margin-bottom:10px;
+    font-size:13px;
 }
-iframe{
-    width:100%;
-    height:100%;
-    border:none;
+
+/* LINK */
+.link{
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
 }
-.btn-group{
-    display:flex;
-    gap:10px;
+
+.link a{
+    color:var(--secondary);
+    text-decoration:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<!-- FORM -->
-<div class="left">
-<h3>Form Surat Lamaran</h3>
-
-<label>Kota & Tanggal</label>
-<input id="kota" placeholder="Bandung, 30 Januari 2026">
-
-<label>Nama Penyusun</label>
-<input id="name" placeholder="Nama Lengkap">
-
-<label>Email</label>
-<input id="email">
-
-<label>No HP</label>
-<input id="phone">
-
-<label>Alamat</label>
-<input id="alamat">
-
-<label>Nama Perusahaan</label>
-<input id="company">
-
-<label>Isi Surat</label>
-<textarea id="body" rows="6"></textarea>
-
-<div class="btn-group">
-    <button class="btn-print" onclick="printPdf()">Cetak PDF</button>
-    <button class="btn-clear" onclick="clearForm()">Clear</button>
-</div>
+<!-- HEADER -->
+<div class="header">
+    <h1>Selamat Datang</h1>
+    <p>Masuk untuk melanjutkan perjalanan ibadah Anda</p>
 </div>
 
-<!-- PREVIEW -->
-<div class="right">
-    <iframe id="preview" src="{{ route('preview') }}"></iframe>
-</div>
+<!-- CARD LOGIN -->
+<div class="card">
+
+    <h2>Login</h2>
+
+    @if($errors->any())
+        <div class="error">{{ $errors->first() }}</div>
+    @endif
+
+    <form method="POST" action="/login">
+        @csrf
+
+        <input class="input" name="login" placeholder="Email / Username" required>
+
+        <input class="input" type="password" id="pass" name="password" placeholder="Password" required>
+
+        <label style="font-size:13px;">
+            <input type="checkbox" onclick="toggle()"> Tampilkan password
+        </label>
+
+        <br><br>
+
+        <button class="btn">Login</button>
+    </form>
+
+    <div class="link">
+        Belum punya akun? <a href="/register">Daftar</a>
+    </div>
 
 </div>
 
 <script>
-const iframe = document.getElementById("preview");
-
-function updatePreview(){
-    iframe.contentWindow.postMessage({
-        kota: document.getElementById("kota").value,
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        alamat: document.getElementById("alamat").value,
-        company: document.getElementById("company").value,
-        body: document.getElementById("body").value
-    }, "*");
-}
-
-document.querySelectorAll("input, textarea").forEach(el=>{
-    el.addEventListener("input", updatePreview);
-});
-
-function clearForm(){
-    document.querySelectorAll("input, textarea").forEach(el=>el.value="");
-    updatePreview();
-}
-
-function printPdf(){
-    iframe.contentWindow.print();
+function toggle(){
+    let x = document.getElementById("pass");
+    x.type = x.type === "password" ? "text" : "password";
 }
 </script>
 

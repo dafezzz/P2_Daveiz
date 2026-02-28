@@ -1,36 +1,46 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title','Travel Management System')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Vendor -->
+    <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Corporate Theme -->
+    <link href="{{ asset('css/corporate.css') }}" rel="stylesheet">
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+<body id="page-top">
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+<div id="wrapper">
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+    @include('layouts.sidebar')
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            @include('layouts.topbar')
+
+            <div class="container-fluid py-4">
+                @yield('content')
+            </div>
+
         </div>
-    </body>
+
+        <footer class="footer-corporate">
+            © {{ date('Y') }} PT Travel Umrah & Haji. All Rights Reserved.
+        </footer>
+    </div>
+
+</div>
+
+<script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
+
+@stack('scripts')
+</body>
 </html>
