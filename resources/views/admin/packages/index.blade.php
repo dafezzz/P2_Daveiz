@@ -46,7 +46,7 @@
                         <th width="80">Foto</th>
                         <th>Package</th>
                         <th>Harga</th>
-                        <th>Quota</th>
+                        <th>Kuota</th>
                         <th>Status</th>
                         <th width="150" class="text-center">Aksi</th>
                     </tr>

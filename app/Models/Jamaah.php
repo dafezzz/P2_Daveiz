@@ -14,4 +14,9 @@ class Jamaah extends Model
         'registration_number',
         'departure_date'
     ];
+
+    public function group()
+{
+    return $this->belongsTo(JamaahGroup::class,'group_id');
+}
 }
